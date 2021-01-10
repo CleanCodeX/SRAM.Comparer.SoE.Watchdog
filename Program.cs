@@ -1,130 +1,57 @@
 ﻿using System;
-using System.Drawing;
-using System.IO;
-using System.Threading;
-using Common.Shared.Min.Extensions;
-using SramComparer.Enums;
-using SramComparer.Extensions;
-using SramComparer.Helpers;
 using SramComparer.Services;
+using SramComparer.SoE.FileWatcher.Helpers;
 using SramComparer.SoE.Services;
 
 namespace SramComparer.SoE.FileWatcher
 {
 	internal class Program
 	{
-		private const int ProcessWaitMiliseconds = 50;
-
-		private static FileSystemWatcher? FileSystemWatcher;
 		private static IConsolePrinter ConsolePrinter => ServiceCollection.ConsolePrinter;
-		private static ICommandHandler CommandHandler => ServiceCollection.CommandHandler!;
+
+		private static readonly WatchOptions WatchOptions = new();
 
 		private static void Main(string[] args)
 		{
 			var options = new CmdLineParserSoE().Parse(args);
 
-			Initialize(options);
+			ConsoleHelper.Initialize(options);
+			ConsoleHelper.PrintParams(args, options);
+			ConsoleHelper.PrintOptions(WatchOptions);
+			ConsoleHelper.PrintHelp();
 
-			PrintParams(args, options);
-			PrintHelp();
-
-			StartWatching(options);
+			using var fileSystemWatcher = FileWatcherHelper.StartWatching(options, WatchOptions);
 
 			while (true)
 			{
-				var key = Console.ReadLine()!;
-				if (key == "??")
+				var key = Console.ReadLine()!.ToLower();
+				switch (key)
 				{
-					PrintHelp();
-					continue;
-				}
+					case "??":
+						ConsoleHelper.PrintHelp();
+						continue;
+					case "auto_e":
+						WatchOptions.AutoExport = !WatchOptions.AutoExport;
+						ConsoleHelper.PrintOption(nameof(WatchOptions.AutoExport), WatchOptions.AutoExport);
+						continue;
+					case "auto_o":
+						WatchOptions.AutoOverwrite = !WatchOptions.AutoOverwrite;
+						ConsoleHelper.PrintOption(nameof(WatchOptions.AutoOverwrite), WatchOptions.AutoOverwrite);
+						continue;
+					default:
+						try
+						{
+							if (!CommandHelper.RunCommand(key, options))
+								return;
+						}
+						catch (Exception ex)
+						{
+							ConsolePrinter.PrintFatalError(ex.Message);
+						}
 
-				try
-				{
-					if (!RunCommand(key, options))
 						break;
 				}
-				catch (Exception ex)
-				{
-					ConsolePrinter.PrintFatalError(ex.Message);
-				}
 			}
-
-			FileSystemWatcher?.Dispose();
-		}
-
-		private static void StartWatching(IOptions options)
-		{
-			var filePath = options.CurrentFilePath!;
-			var directory = Path.GetDirectoryName(filePath)!;
-			var fileName = Path.GetFileName(filePath)!;
-
-			FileSystemWatcher = new FileSystemWatcher(directory, fileName)
-			{
-				EnableRaisingEvents = true,
-				NotifyFilter = NotifyFilters.LastWrite
-			};
-
-			DateTime lastReadTime = default;
-
-			FileSystemWatcher.Changed += (_, _) =>
-			{
-				var lastWriteTime = File.GetLastWriteTime(filePath);
-				if ((lastWriteTime - lastReadTime).TotalSeconds <= 1) return;
-
-				lastReadTime = lastWriteTime;
-				ConsolePrinter.PrintSectionHeader();
-				ConsolePrinter.PrintColoredLine(ConsoleColor.DarkYellow, "Fille changed. Starting comparison...");
-
-				Thread.Sleep(ProcessWaitMiliseconds);
-
-				try
-				{
-					using (File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.Read))
-						RunCommand(nameof(Commands.Compare), options);
-				}
-				catch (Exception ex)
-				{
-					ConsolePrinter.PrintFatalError(ex.Message);
-				}
-			};
-
-			ConsolePrinter.PrintColoredLine(ConsoleColor.DarkYellow, $"Sending {nameof(Commands.OverwriteComp)} command...");
-			RunCommand(nameof(Commands.OverwriteComp), options);
-
-			ConsolePrinter.PrintSectionHeader();
-			ConsolePrinter.PrintColoredLine(ConsoleColor.Yellow, @$"Watching ""{fileName}"" for changes...");
-			ConsolePrinter.ResetColor();
-		}
-
-		private static bool RunCommand(string command, IOptions options) => CommandHandler.RunCommand(command, options, Console.Out);
-
-		private static void PrintParams(string[] args, IOptions options)
-		{
-			ConsolePrinter.PrintSectionHeader("Arguments");
-			ConsolePrinter.PrintConfigLine("File to watch", "{0}", @$"""{options.CurrentFilePath}""");
-			ConsolePrinter.PrintConfigLine("Other params for SRAM-Comparer", args[1..].Join(" "));
-			ConsolePrinter.ResetColor();
-		}
-
-		private static void PrintHelp()
-		{
-			ConsolePrinter.PrintSectionHeader("Commands");
-			ConsolePrinter.PrintConfigLine("Quit [Q]", "Quit the app");
-			ConsolePrinter.PrintConfigLine("??", "Show this help");
-			ConsolePrinter.PrintConfigLine("?", "Show help of SRAM-Comparer");
-			ConsolePrinter.PrintConfigLine("Any other key", "Will be passed to SRAM-Comparer");
-			ConsolePrinter.PrintLine();
-			ConsolePrinter.ResetColor();
-		}
-
-		private static void Initialize(IOptions options)
-		{
-			PaletteHelper.SetScreenColors(Color.White, Color.FromArgb(17, 17, 17));
-			Console.Clear();
-
-			if (options.UILanguage is not null)
-				CultureHelper.TrySetCulture(options.UILanguage);
 		}
 	}
 }
