@@ -1,17 +1,17 @@
 ﻿using System;
 using System.IO;
 using System.Threading;
-using SramComparer.Enums;
 using SramComparer.Services;
 
 namespace SramComparer.SoE.FileWatcher.Helpers
 {
 	internal class FileWatcherHelper
 	{
-		private static IConsolePrinter ConsolePrinter => ServiceCollection.ConsolePrinter;
-
 		private const int ProcessWaitMiliseconds = 50;
 
+		private static IConsolePrinter ConsolePrinter => ServiceCollection.ConsolePrinter;
+		private static DateTime lastReadTime ;
+		
 		public static FileSystemWatcher StartWatching(IOptions options, WatchOptions watchOptions)
 		{
 			var filePath = options.CurrentFilePath!;
@@ -24,48 +24,48 @@ namespace SramComparer.SoE.FileWatcher.Helpers
 				NotifyFilter = NotifyFilters.LastWrite
 			};
 
-			DateTime lastReadTime = default;
+			fileSystemWatcher.Changed += (_, _) => OnFileChanged(options, watchOptions);
 
-			fileSystemWatcher.Changed += (_, _) =>
-			{
-				var lastWriteTime = File.GetLastWriteTime(filePath);
-				if ((lastWriteTime - lastReadTime).TotalSeconds <= 1) return;
-
-				lastReadTime = lastWriteTime;
-				ConsolePrinter.PrintSectionHeader();
-				ConsolePrinter.PrintColoredLine(ConsoleColor.DarkYellow, "Fille changed. Starting comparison...");
-
-				Thread.Sleep(ProcessWaitMiliseconds);
-
-				try
-				{
-					using (File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.Read))
-					{
-						CommandHelper.RunCommand(nameof(Commands.Compare), options);
-						if(watchOptions.AutoExport)
-							CommandHelper.RunCommand(nameof(Commands.Export), options);
-						OverwriteComparisonFile(options);
-					}
-				}
-				catch (Exception ex)
-				{
-					ConsolePrinter.PrintFatalError(ex.Message);
-				}
-			};
-
-			OverwriteComparisonFile(options);
-
-			ConsolePrinter.PrintSectionHeader();
-			ConsolePrinter.PrintColoredLine(ConsoleColor.Yellow, @$"Watching ""{fileName}"" for changes...");
-			ConsolePrinter.ResetColor();
+			CommandHelper.OverwriteComp(options);
+			ConsoleHelper.PrintWatchingStarted(options);
 
 			return fileSystemWatcher;
 		}
 
-		private static void OverwriteComparisonFile(IOptions options)
+		private static bool IsFileChange(string filePath)
 		{
-			ConsolePrinter.PrintColoredLine(ConsoleColor.DarkYellow, $"Sending {nameof(Commands.OverwriteComp)} command...");
-			CommandHelper.RunCommand(nameof(Commands.OverwriteComp), options);
+			var lastWriteTime = File.GetLastWriteTime(filePath);
+			if ((lastWriteTime - lastReadTime).TotalSeconds <= 1) return false;
+
+			lastReadTime = lastWriteTime;
+			return true;
+		}
+
+		private static void OnFileChanged(IOptions options, WatchOptions watchOptions)
+		{
+			if (!IsFileChange(options.CurrentFilePath!)) return;
+
+			ConsoleHelper.PrintFileChanged();
+
+			Thread.Sleep(ProcessWaitMiliseconds);
+
+			try
+			{
+				// Lock file for writing
+				using (File.Open(options.CurrentFilePath!, FileMode.Open, FileAccess.Read, FileShare.Read))
+				{
+					CommandHelper.Compare(options);
+					if (watchOptions.AutoExport)
+						CommandHelper.Export(options);
+
+					if (watchOptions.AutoOverwrite)
+						CommandHelper.OverwriteComp(options);
+				}
+			}
+			catch (Exception ex)
+			{
+				ConsolePrinter.PrintFatalError(ex.Message);
+			}
 		}
 	}
 }

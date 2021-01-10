@@ -34,7 +34,8 @@ namespace SramComparer.SoE.FileWatcher.Helpers
 			ConsolePrinter.PrintConfigLine("Quit [Q]", "Quit the app");
 			ConsolePrinter.PrintConfigLine("??", "Show this help");
 			ConsolePrinter.PrintConfigLine("?", "Show help of SRAM-Comparer");
-			ConsolePrinter.PrintConfigLine("Auto", "Enable / disable Auto-export compararison result: default is false");
+			ConsolePrinter.PrintConfigLine("Auto_E", "Inverts option to auto-export compararison result after comparison. default is: false");
+			ConsolePrinter.PrintConfigLine("Auto_O", "Inverts option to auto-overwrite compararison file after comparison and export. default is: true");
 			ConsolePrinter.PrintConfigLine("Any other key", "Will be passed to SRAM-Comparer");
 			ConsolePrinter.PrintLine();
 			ConsolePrinter.ResetColor();
@@ -54,6 +55,19 @@ namespace SramComparer.SoE.FileWatcher.Helpers
 			ConsolePrinter.PrintConfigLine(nameof(options.AutoExport), options.AutoExport.ToString());
 			ConsolePrinter.PrintConfigLine(nameof(options.AutoOverwrite), options.AutoOverwrite.ToString());
 			ConsolePrinter.ResetColor();
+		}
+
+		public static void PrintWatchingStarted(IOptions options)
+		{
+			ConsolePrinter.PrintSectionHeader();
+			ConsolePrinter.PrintColoredLine(ConsoleColor.Yellow, @$"Watching ""{options.CurrentFilePath}"" for changes...");
+			ConsolePrinter.ResetColor();
+		}
+
+		public static void PrintFileChanged()
+		{
+			ConsolePrinter.PrintSectionHeader();
+			ConsolePrinter.PrintColoredLine(ConsoleColor.DarkYellow, "File changed. Starting comparison...");
 		}
 	}
 }

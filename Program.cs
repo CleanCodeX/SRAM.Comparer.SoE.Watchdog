@@ -25,31 +25,32 @@ namespace SramComparer.SoE.FileWatcher
 			while (true)
 			{
 				var key = Console.ReadLine()!.ToLower();
-				switch (key)
+
+				try
 				{
-					case "??":
-						ConsoleHelper.PrintHelp();
-						continue;
-					case "auto_e":
-						WatchOptions.AutoExport = !WatchOptions.AutoExport;
-						ConsoleHelper.PrintOption(nameof(WatchOptions.AutoExport), WatchOptions.AutoExport);
-						continue;
-					case "auto_o":
-						WatchOptions.AutoOverwrite = !WatchOptions.AutoOverwrite;
-						ConsoleHelper.PrintOption(nameof(WatchOptions.AutoOverwrite), WatchOptions.AutoOverwrite);
-						continue;
-					default:
-						try
-						{
+					switch (key)
+					{
+						case "??":
+							ConsoleHelper.PrintHelp();
+							continue;
+						case "auto_e":
+							WatchOptions.AutoExport = !WatchOptions.AutoExport;
+							ConsoleHelper.PrintOption(nameof(WatchOptions.AutoExport), WatchOptions.AutoExport);
+							continue;
+						case "auto_o":
+							WatchOptions.AutoOverwrite = !WatchOptions.AutoOverwrite;
+							ConsoleHelper.PrintOption(nameof(WatchOptions.AutoOverwrite), WatchOptions.AutoOverwrite);
+							continue;
+						default:
 							if (!CommandHelper.RunCommand(key, options))
 								return;
-						}
-						catch (Exception ex)
-						{
-							ConsolePrinter.PrintFatalError(ex.Message);
-						}
-
-						break;
+								
+							break;
+					}
+				}
+				catch (Exception ex)
+				{
+					ConsolePrinter.PrintFatalError(ex.Message);
 				}
 			}
 		}
