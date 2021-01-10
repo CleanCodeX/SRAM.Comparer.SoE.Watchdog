@@ -17,7 +17,8 @@ namespace SramComparer.SoE.FileWatcher
 
 		private static FileSystemWatcher? FileSystemWatcher;
 		private static IConsolePrinter ConsolePrinter => ServiceCollection.ConsolePrinter;
-		
+		private static ICommandHandler CommandHandler => ServiceCollection.CommandHandler!;
+
 		private static void Main(string[] args)
 		{
 			var options = new CmdLineParserSoE().Parse(args);
@@ -40,7 +41,7 @@ namespace SramComparer.SoE.FileWatcher
 
 				try
 				{
-					if (!SendCommand(key, options))
+					if (!RunCommand(key, options))
 						break;
 				}
 				catch (Exception ex)
@@ -51,8 +52,6 @@ namespace SramComparer.SoE.FileWatcher
 
 			FileSystemWatcher?.Dispose();
 		}
-
-		private static bool SendCommand(string command, IOptions options) => SramComparerApiStarter.RunCommand(command, options);
 
 		private static void StartWatching(IOptions options)
 		{
@@ -82,7 +81,7 @@ namespace SramComparer.SoE.FileWatcher
 				try
 				{
 					using (File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.Read))
-						SramComparerApiStarter.RunCommand(nameof(Commands.Compare), options);
+						RunCommand(nameof(Commands.Compare), options);
 				}
 				catch (Exception ex)
 				{
@@ -91,12 +90,14 @@ namespace SramComparer.SoE.FileWatcher
 			};
 
 			ConsolePrinter.PrintColoredLine(ConsoleColor.DarkYellow, $"Sending {nameof(Commands.OverwriteComp)} command...");
-			SramComparerApiStarter.RunCommand(nameof(Commands.OverwriteComp), options);
+			RunCommand(nameof(Commands.OverwriteComp), options);
 
 			ConsolePrinter.PrintSectionHeader();
 			ConsolePrinter.PrintColoredLine(ConsoleColor.Yellow, @$"Watching ""{fileName}"" for changes...");
 			ConsolePrinter.ResetColor();
 		}
+
+		private static bool RunCommand(string command, IOptions options) => CommandHandler.RunCommand(command, options, Console.Out);
 
 		private static void PrintParams(string[] args, IOptions options)
 		{
