@@ -44,8 +44,8 @@ namespace SramComparer.SoE.FileWatcher
 						default:
 							if (!CommandHelper.RunCommand(key, options))
 								return;
-								
-							break;
+
+							continue;
 					}
 				}
 				catch (Exception ex)
