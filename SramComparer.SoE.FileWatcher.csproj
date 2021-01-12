@@ -33,14 +33,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Properties\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="CCX.SramComparer.SoE" Version="0.3.1-c4" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\SramComparer.SoE\SramComparer.SoE.csproj" />
+    <PackageReference Include="CCX.SramComparer.SoE" Version="0.3.1-c5" />
   </ItemGroup>
 </Project>
