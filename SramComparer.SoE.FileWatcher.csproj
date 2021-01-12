@@ -16,6 +16,7 @@
     <Description>File watcher for S-RAM Comparer</Description>
     <PackageTags>SoE, Secret Eof Evermore, SNES, S-RAM, SRAM</PackageTags>
     <ApplicationIcon>Icon.ico</ApplicationIcon>
+    <AssemblyName>SramComparer.SoE.Watchdog</AssemblyName>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
