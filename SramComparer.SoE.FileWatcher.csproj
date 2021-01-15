@@ -34,7 +34,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="CCX.SramComparer.SoE" Version="0.3.1-d3" />
+    <PackageReference Include="CCX.SramComparer.SoE" Version="0.3.1-d7" />
   </ItemGroup>
 
   <ItemGroup>
