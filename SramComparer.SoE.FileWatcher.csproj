@@ -34,10 +34,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="CCX.SramComparer.SoE" Version="0.3.1-d2" />
+    <PackageReference Include="CCX.SramComparer.SoE" Version="0.3.1-d3" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\RosettaStone.Savestate.Snes9x.SoE\RosettaStone.Savestate.Snes9x.SoE.csproj" />
+    <ProjectReference Include="..\RosettaStone.Sram.SoE\RosettaStone.Sram.SoE.csproj" />
     <ProjectReference Include="..\SramComparer.SoE\SramComparer.SoE.csproj" />
+    <ProjectReference Include="..\SramComparer\SramComparer.csproj" />
   </ItemGroup>
 </Project>
