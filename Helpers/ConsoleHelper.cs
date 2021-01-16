@@ -34,8 +34,8 @@ namespace SramComparer.SoE.FileWatcher.Helpers
 			ConsolePrinter.PrintConfigLine("Quit [Q]", "Quit the app");
 			ConsolePrinter.PrintConfigLine("??", "Show this help");
 			ConsolePrinter.PrintConfigLine("?", "Show help of SRAM-Comparer");
-			ConsolePrinter.PrintConfigLine("Auto_E", "Inverts option to auto-export compararison result after comparison. default is: false");
-			ConsolePrinter.PrintConfigLine("Auto_O", "Inverts option to auto-overwrite compararison file after comparison and export. default is: true");
+			ConsolePrinter.PrintConfigLine("Auto_E", "Inverts option to auto-export comparison result after comparison. default is: false");
+			ConsolePrinter.PrintConfigLine("Auto_O", "Inverts option to auto-overwrite comparison file after comparison and export. default is: true");
 			ConsolePrinter.PrintConfigLine("Any other key", "Will be passed to SRAM-Comparer");
 			ConsolePrinter.PrintLine();
 			ConsolePrinter.ResetColor();
