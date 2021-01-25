@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "SRAM.Comparison.SoE.ControlApp": {
+      "commandName": "Project",
+      "commandLineArgs": "\"E:\\Spiele\\SNES\\snes9x-1.60-win32-x64\\Saves\\Secret of Evermore (U) (2 Player) 1.02 Hard.009\""
+    }
+  }
+}

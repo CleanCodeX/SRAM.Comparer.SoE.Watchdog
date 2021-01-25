@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Drawing;
 using Common.Shared.Min.Extensions;
-using SramComparer.Extensions;
-using SramComparer.Helpers;
-using SramComparer.Services;
+using SRAM.Comparison.Extensions;
+using SRAM.Comparison.Helpers;
+using SRAM.Comparison.Services;
 
-namespace SramComparer.SoE.FileWatcher.Helpers
+namespace SRAM.Comparison.SoE.Watchdog.Helpers
 {
 	internal class ConsoleHelper
 	{

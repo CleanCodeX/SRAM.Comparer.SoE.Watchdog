@@ -1,9 +1,9 @@
 ﻿using System;
-using SramComparer.Services;
-using SramComparer.SoE.FileWatcher.Helpers;
-using SramComparer.SoE.Services;
+using SRAM.Comparison.Services;
+using SRAM.Comparison.SoE.Watchdog.Helpers;
+using SRAM.Comparison.SoE.Services;
 
-namespace SramComparer.SoE.FileWatcher
+namespace SRAM.Comparison.SoE.Watchdog
 {
 	internal class Program
 	{

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.IO;
 using System.Threading;
-using SramComparer.Services;
+using SRAM.Comparison.Services;
 
-namespace SramComparer.SoE.FileWatcher.Helpers
+namespace SRAM.Comparison.SoE.Watchdog.Helpers
 {
 	internal class FileWatcherHelper
 	{

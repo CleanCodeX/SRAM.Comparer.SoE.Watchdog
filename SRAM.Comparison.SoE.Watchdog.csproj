@@ -5,10 +5,10 @@
     <TargetFramework>net5.0</TargetFramework>
     <Nullable>enable</Nullable>
     <LangVersion>preview</LangVersion>
-    <Version>0.0.1</Version>
-    <Authors>CleanCoderX</Authors>
+    <Version>0.2.0</Version>
+    <Authors>S. Krauter { CleanCoderX, XETH }</Authors>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <RepositoryUrl>https://github.com/CleanCodeX/SramComparer.SoE.FileWatcher</RepositoryUrl>
+    <RepositoryUrl>https://github.com/CleanCodeX/SRAM.Comparison.SoE.Watchdog</RepositoryUrl>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageProjectUrl>http://evermore.xeth.de</PackageProjectUrl>
@@ -16,8 +16,20 @@
     <Description>File watcher for S-RAM Comparer</Description>
     <PackageTags>SoE, Secret Eof Evermore, SNES, S-RAM, SRAM</PackageTags>
     <ApplicationIcon>Icon.ico</ApplicationIcon>
-    <AssemblyName>SramComparer.SoE.Watchdog</AssemblyName>
+    <AssemblyName>SRAM.Comparison.SoE.Watchdog</AssemblyName>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CCX.SRAM.Comparison.SoE" Version="0.4.0-a1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SoE\SoE.csproj" />
+    <ProjectReference Include="..\WRAM.Snes9x.SoE\WRAM.Snes9x.SoE.csproj" />
+    <ProjectReference Include="..\SRAM.SoE\SRAM.SoE.csproj" />
+    <ProjectReference Include="..\SRAM.Comparison.SoE\SRAM.Comparison.SoE.csproj" />
+    <ProjectReference Include="..\SRAM.Comparison\SRAM.Comparison.csproj" />
+  </ItemGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <DebugType>embedded</DebugType>
@@ -31,16 +43,5 @@
 
   <ItemGroup>
     <None Remove=".gitignore" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="CCX.SramComparer.SoE" Version="0.3.1-e1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\RosettaStone.Savestate.Snes9x.SoE\RosettaStone.Savestate.Snes9x.SoE.csproj" />
-    <ProjectReference Include="..\RosettaStone.Sram.SoE\RosettaStone.Sram.SoE.csproj" />
-    <ProjectReference Include="..\SramComparer.SoE\SramComparer.SoE.csproj" />
-    <ProjectReference Include="..\SramComparer\SramComparer.csproj" />
   </ItemGroup>
 </Project>

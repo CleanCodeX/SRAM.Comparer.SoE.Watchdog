@@ -1,4 +1,4 @@
-﻿namespace SramComparer.SoE.FileWatcher.Helpers
+﻿namespace SRAM.Comparison.SoE.Watchdog.Helpers
 {
 	internal class WatchOptions
 	{

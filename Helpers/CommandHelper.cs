@@ -1,8 +1,8 @@
 ﻿using System;
-using SramComparer.Enums;
-using SramComparer.Services;
+using SRAM.Comparison.Enums;
+using SRAM.Comparison.Services;
 
-namespace SramComparer.SoE.FileWatcher.Helpers
+namespace SRAM.Comparison.SoE.Watchdog.Helpers
 {
 	internal class CommandHelper
 	{

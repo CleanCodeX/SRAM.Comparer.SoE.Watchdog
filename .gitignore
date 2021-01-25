@@ -9,6 +9,7 @@
 *.user
 *.userosscache
 *.sln.docstates
+.gitignore
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
@@ -30,6 +31,7 @@ bld/
 [Oo]bj/
 [Ll]og/
 [Ll]ogs/
+obj/
 
 # Visual Studio 2015/2017 cache/options directory
 .vs/
@@ -348,8 +350,3 @@ MigrationBackup/
 
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
-
-/SramComparer.SoE/nuget.config
-/SramComparer.SoE/Properties/launchSettings.json
-obj
-*.json
