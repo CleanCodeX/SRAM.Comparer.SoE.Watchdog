@@ -1,23 +1,58 @@
 ﻿using System;
+using System.IO;
+using SRAM.Comparison.Helpers;
+using SRAM.Comparison.Properties;
 using SRAM.Comparison.Services;
 using SRAM.Comparison.SoE.Watchdog.Helpers;
 using SRAM.Comparison.SoE.Services;
+using ConsoleHelper = SRAM.Comparison.SoE.Watchdog.Helpers.ConsoleHelper;
+using Common.Shared.Min.Extensions;
 
 namespace SRAM.Comparison.SoE.Watchdog
 {
 	internal class Program
 	{
-		private static IConsolePrinter ConsolePrinter => ServiceCollection.ConsolePrinter;
-
+		private static readonly string DefaultConfigFileName = CommandHandler.DefaultConfigFileName;
 		private static readonly WatchOptions WatchOptions = new();
 
+		private static IConsolePrinter ConsolePrinter => ServiceCollection.ConsolePrinter;
+		
 		private static void Main(string[] args)
 		{
 			try
 			{
-				var options = new CmdLineParserSoE().Parse(args);
+				IOptions options = null!;
+				string? configToLoad = null;
+				var cmdParser = new CmdLineParserSoE();
+
+				if (File.Exists(DefaultConfigFileName))
+					configToLoad = DefaultConfigFileName;
+				else
+				{
+					options = cmdParser.Parse(args);
+
+					if (options.ConfigPath is { } configFile)
+						configToLoad = configFile;
+				}
+
+				if (configToLoad is not null)
+				{
+					var loadedConfig = JsonFileSerializer.Deserialize<Options>(configToLoad);
+					options = cmdParser.Parse(args, loadedConfig);
+				}
+
+				ConsolePrinter.ColorizeOutput = options.ColorizeOutput;
 
 				ConsoleHelper.Initialize(options);
+
+				if (configToLoad is not null)
+				{
+					ConsolePrinter.PrintSectionHeader();
+					ConsolePrinter.PrintColoredLine(ConsoleColor.Green,
+						Resources.StatusConfigFileLoadedTemplate.InsertArgs(configToLoad));
+					ConsolePrinter.ResetColor();
+				}
+
 				ConsoleHelper.PrintParams(args, options);
 				ConsoleHelper.PrintOptions(WatchOptions);
 				ConsoleHelper.PrintHelp();
@@ -62,5 +97,9 @@ namespace SRAM.Comparison.SoE.Watchdog
 				Console.ReadKey();
 			}
 		}
+
+		private static IOptions GetDefaultConfigOrNew() => File.Exists(DefaultConfigFileName)
+			? JsonFileSerializer.Deserialize<Options>(DefaultConfigFileName)
+			: new Options();
 	}
 }
