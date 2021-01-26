@@ -18,6 +18,8 @@ namespace SRAM.Comparison.SoE.Watchdog.Helpers
 
 			if (options.UILanguage is not null)
 				CultureHelper.TrySetCulture(options.UILanguage);
+
+			ConsolePrinter.ColorizeOutput = options.ColorizeOutput;
 		}
 
 		public static void PrintParams(string[] args, IOptions options)

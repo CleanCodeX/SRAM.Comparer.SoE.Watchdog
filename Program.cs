@@ -23,7 +23,7 @@ namespace SRAM.Comparison.SoE.Watchdog
 			{
 				IOptions options = null!;
 				string? configToLoad = null;
-				var cmdParser = new CmdLineParserSoE();
+				CmdLineParserSoE cmdParser = new();
 
 				if (File.Exists(DefaultConfigFileName))
 					configToLoad = DefaultConfigFileName;
@@ -40,8 +40,6 @@ namespace SRAM.Comparison.SoE.Watchdog
 					var loadedConfig = JsonFileSerializer.Deserialize<Options>(configToLoad);
 					options = cmdParser.Parse(args, loadedConfig);
 				}
-
-				ConsolePrinter.ColorizeOutput = options.ColorizeOutput;
 
 				ConsoleHelper.Initialize(options);
 
