@@ -9,7 +9,7 @@ namespace SRAM.Comparison.SoE.Watchdog.Helpers
 	{
 		private const int ProcessWaitMiliseconds = 50;
 
-		private static IConsolePrinter ConsolePrinter => ServiceCollection.ConsolePrinter;
+		private static IConsolePrinter ConsolePrinter => ComparisonServices.ConsolePrinter;
 		private static DateTime lastReadTime ;
 		
 		public static FileSystemWatcher StartWatching(IOptions options, WatchOptions watchOptions)

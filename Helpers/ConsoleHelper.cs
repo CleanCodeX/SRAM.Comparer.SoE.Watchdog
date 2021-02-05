@@ -9,7 +9,7 @@ namespace SRAM.Comparison.SoE.Watchdog.Helpers
 {
 	internal class ConsoleHelper
 	{
-		private static IConsolePrinter ConsolePrinter => ServiceCollection.ConsolePrinter;
+		private static IConsolePrinter ConsolePrinter => ComparisonServices.ConsolePrinter;
 
 		public static void Initialize(IOptions options)
 		{

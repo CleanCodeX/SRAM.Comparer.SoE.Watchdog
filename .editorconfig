@@ -1,0 +1,4 @@
+﻿[*.cs]
+
+# CA2211: Nicht konstante Felder dürfen nicht sichtbar sein
+dotnet_diagnostic.CA2211.severity = silent

@@ -13,9 +13,8 @@ namespace SRAM.Comparison.SoE.Watchdog
 	internal class Program
 	{
 		private static readonly string DefaultConfigFileName = CommandHandler.DefaultConfigFileName;
-		private static readonly WatchOptions WatchOptions = new();
 
-		private static IConsolePrinter ConsolePrinter => ServiceCollection.ConsolePrinter;
+		private static IConsolePrinter ConsolePrinter => ComparisonServices.ConsolePrinter;
 		
 		private static void Main(string[] args)
 		{
@@ -52,10 +51,7 @@ namespace SRAM.Comparison.SoE.Watchdog
 				}
 
 				ConsoleHelper.PrintParams(args, options);
-				ConsoleHelper.PrintOptions(WatchOptions);
 				ConsoleHelper.PrintHelp();
-
-				using var fileSystemWatcher = FileWatcherHelper.StartWatching(options, WatchOptions);
 
 				while (true)
 				{
@@ -67,14 +63,6 @@ namespace SRAM.Comparison.SoE.Watchdog
 						{
 							case "??":
 								ConsoleHelper.PrintHelp();
-								continue;
-							case "auto_e":
-								WatchOptions.AutoExport = !WatchOptions.AutoExport;
-								ConsoleHelper.PrintOption(nameof(WatchOptions.AutoExport), WatchOptions.AutoExport);
-								continue;
-							case "auto_o":
-								WatchOptions.AutoOverwrite = !WatchOptions.AutoOverwrite;
-								ConsoleHelper.PrintOption(nameof(WatchOptions.AutoOverwrite), WatchOptions.AutoOverwrite);
 								continue;
 							default:
 								if (!CommandHelper.RunCommand(key, options))
@@ -95,9 +83,5 @@ namespace SRAM.Comparison.SoE.Watchdog
 				Console.ReadKey();
 			}
 		}
-
-		private static IOptions GetDefaultConfigOrNew() => File.Exists(DefaultConfigFileName)
-			? JsonFileSerializer.Deserialize<Options>(DefaultConfigFileName)
-			: new Options();
 	}
 }
