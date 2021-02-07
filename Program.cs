@@ -36,8 +36,16 @@ namespace SRAM.Comparison.SoE.Watchdog
 
 				if (configToLoad is not null)
 				{
-					var loadedConfig = JsonFileSerializer.Deserialize<Options>(configToLoad);
-					options = cmdParser.Parse(args, loadedConfig);
+					try
+					{
+						var loadedConfig = JsonFileSerializer.Deserialize<Options>(configToLoad);
+						options = cmdParser.Parse(args, loadedConfig);
+					}
+					catch (Exception ex)
+					{
+						ConsolePrinter.PrintError(ex);
+						options = cmdParser.Parse(args);
+					}
 				}
 
 				ConsoleHelper.Initialize(options);
